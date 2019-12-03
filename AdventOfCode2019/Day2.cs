@@ -47,6 +47,8 @@ namespace AdventOfCode2018
 
         public static void part2()
         {
+            //done manually, simple math;
+            //for my case noun = 82, verb = 26, answer = 8226
         }
     }
 }
