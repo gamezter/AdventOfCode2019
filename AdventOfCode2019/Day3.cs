@@ -18,18 +18,18 @@ namespace AdventOfCode2019
 
             foreach(string step in lines[0].Split(','))
             {
-                char dir = step[0];
-                int dist = int.Parse(step.Substring(1));
-
                 int dx = 0, dy = 0;
-                if (dir == 'R')
+
+                if (step[0] == 'R')
                     dx = 1;
-                else if (dir == 'U')
+                else if (step[0] == 'U')
                     dy = -1;
-                else if (dir == 'L')
+                else if (step[0] == 'L')
                     dx = -1;
-                else if (dir == 'D')
+                else if (step[0] == 'D')
                     dy = 1;
+
+                int dist = int.Parse(step.Substring(1));
 
                 for (int i = 0; i < dist; i++)
                 {
@@ -46,19 +46,18 @@ namespace AdventOfCode2019
 
             foreach (string step in lines[1].Split(','))
             {
-                char dir = step[0];
-                int dist = int.Parse(step.Substring(1));
-
                 int dx = 0, dy = 0;
 
-                if (dir == 'R')
+                if (step[0] == 'R')
                     dx = 1;
-                else if (dir == 'U')
+                else if (step[0] == 'U')
                     dy = -1;
-                else if (dir == 'L')
+                else if (step[0] == 'L')
                     dx = -1;
-                else if (dir == 'D')
+                else if (step[0] == 'D')
                     dy = 1;
+
+                int dist = int.Parse(step.Substring(1));
 
                 for (int i = 0; i < dist; i++)
                 {
