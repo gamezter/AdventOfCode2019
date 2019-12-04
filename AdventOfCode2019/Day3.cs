@@ -20,16 +20,21 @@ namespace AdventOfCode2019
             {
                 char dir = step[0];
                 int dist = int.Parse(step.Substring(1));
+
+                int dx = 0, dy = 0;
+                if (dir == 'R')
+                    dx = 1;
+                else if (dir == 'U')
+                    dy = -1;
+                else if (dir == 'L')
+                    dx = -1;
+                else if (dir == 'D')
+                    dy = 1;
+
                 for (int i = 0; i < dist; i++)
                 {
-                    if (dir == 'R')
-                        x++;
-                    else if (dir == 'U')
-                        y--;
-                    else if (dir == 'L')
-                        x--;
-                    else if (dir == 'D')
-                        y++;
+                    x += dx;
+                    y += dy;
                     positions.Add((x, y));
                 }
             }
@@ -43,16 +48,22 @@ namespace AdventOfCode2019
             {
                 char dir = step[0];
                 int dist = int.Parse(step.Substring(1));
+
+                int dx = 0, dy = 0;
+
+                if (dir == 'R')
+                    dx = 1;
+                else if (dir == 'U')
+                    dy = -1;
+                else if (dir == 'L')
+                    dx = -1;
+                else if (dir == 'D')
+                    dy = 1;
+
                 for (int i = 0; i < dist; i++)
                 {
-                    if (dir == 'R')
-                        x++;
-                    else if (dir == 'U')
-                        y--;
-                    else if (dir == 'L')
-                        x--;
-                    else if (dir == 'D')
-                        y++;
+                    x += dx;
+                    y += dy;
 
                     if (positions.Contains((x, y)))
                     {
