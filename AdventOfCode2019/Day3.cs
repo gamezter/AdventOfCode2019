@@ -14,43 +14,23 @@ namespace AdventOfCode2019
             string[] lines = new StreamReader("day3.txt").ReadToEnd().Trim().Split();
             HashSet<(int, int)> positions = new HashSet<(int, int)>();
 
-            string[] firstLine = lines[0].Split(',');
             int x = 0, y = 0;
 
             foreach(string step in lines[0].Split(','))
             {
                 char dir = step[0];
                 int dist = int.Parse(step.Substring(1));
-                switch (dir)
+                for (int i = 0; i < dist; i++)
                 {
-                    case 'R':
-                        for(int i = 0; i < dist; i++)
-                        {
-                            x++;
-                            positions.Add((x, y));
-                        }
-                        break;
-                    case 'U':
-                        for (int i = 0; i < dist; i++)
-                        {
-                            y--;
-                            positions.Add((x, y));
-                        }
-                        break;
-                    case 'L':
-                        for (int i = 0; i < dist; i++)
-                        {
-                            x--;
-                            positions.Add((x, y));
-                        }
-                        break;
-                    case 'D':
-                        for (int i = 0; i < dist; i++)
-                        {
-                            y++;
-                            positions.Add((x, y));
-                        }
-                        break;
+                    if (dir == 'R')
+                        x++;
+                    else if (dir == 'U')
+                        y--;
+                    else if (dir == 'L')
+                        x--;
+                    else if (dir == 'D')
+                        y++;
+                    positions.Add((x, y));
                 }
             }
 
@@ -63,52 +43,23 @@ namespace AdventOfCode2019
             {
                 char dir = step[0];
                 int dist = int.Parse(step.Substring(1));
-                switch (dir)
+                for (int i = 0; i < dist; i++)
                 {
-                    case 'R':
-                        for (int i = 0; i < dist; i++)
-                        {
-                            x++;
-                            if(positions.Contains((x, y)))
-                            {
-                                if (min > Math.Abs(x) + Math.Abs(y))
-                                    min = Math.Abs(x) + Math.Abs(y);
-                            }
-                        }
-                        break;
-                    case 'U':
-                        for (int i = 0; i < dist; i++)
-                        {
-                            y--;
-                            if (positions.Contains((x, y)))
-                            {
-                                if (min > Math.Abs(x) + Math.Abs(y))
-                                    min = Math.Abs(x) + Math.Abs(y);
-                            }
-                        }
-                        break;
-                    case 'L':
-                        for (int i = 0; i < dist; i++)
-                        {
-                            x--;
-                            if (positions.Contains((x, y)))
-                            {
-                                if (min > Math.Abs(x) + Math.Abs(y))
-                                    min = Math.Abs(x) + Math.Abs(y);
-                            }
-                        }
-                        break;
-                    case 'D':
-                        for (int i = 0; i < dist; i++)
-                        {
-                            y++;
-                            if (positions.Contains((x, y)))
-                            {
-                                if (min > Math.Abs(x) + Math.Abs(y))
-                                    min = Math.Abs(x) + Math.Abs(y);
-                            }
-                        }
-                        break;
+                    if (dir == 'R')
+                        x++;
+                    else if (dir == 'U')
+                        y--;
+                    else if (dir == 'L')
+                        x--;
+                    else if (dir == 'D')
+                        y++;
+
+                    if (positions.Contains((x, y)))
+                    {
+                        int manDist = Math.Abs(x) + Math.Abs(y);
+                        if (min > manDist)
+                            min = manDist;
+                    }
                 }
             }
 
