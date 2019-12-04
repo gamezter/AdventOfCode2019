@@ -79,7 +79,74 @@ namespace AdventOfCode2019
 
         public static void part2()
         {
+            string[] lines = new StreamReader("day3.txt").ReadToEnd().Trim().Split();
+            Dictionary<(int, int), int> positions = new Dictionary<(int, int), int>();
 
+            int x = 0, y = 0;
+            int count = 0;
+
+            foreach (string step in lines[0].Split(','))
+            {
+                int dx = 0, dy = 0;
+
+                if (step[0] == 'R')
+                    dx = 1;
+                else if (step[0] == 'U')
+                    dy = -1;
+                else if (step[0] == 'L')
+                    dx = -1;
+                else if (step[0] == 'D')
+                    dy = 1;
+
+                int dist = int.Parse(step.Substring(1));
+
+                for (int i = 0; i < dist; i++)
+                {
+                    x += dx;
+                    y += dy;
+                    count++;
+                    positions[(x, y)] = count;
+                }
+            }
+
+            int min = int.MaxValue;
+
+            x = 0;
+            y = 0;
+            count = 0;
+
+            foreach (string step in lines[1].Split(','))
+            {
+                int dx = 0, dy = 0;
+
+                if (step[0] == 'R')
+                    dx = 1;
+                else if (step[0] == 'U')
+                    dy = -1;
+                else if (step[0] == 'L')
+                    dx = -1;
+                else if (step[0] == 'D')
+                    dy = 1;
+
+                int dist = int.Parse(step.Substring(1));
+
+                for (int i = 0; i < dist; i++)
+                {
+                    x += dx;
+                    y += dy;
+                    count++;
+
+                    if (positions.TryGetValue((x, y), out int val))
+                    {
+                        int time = val + count;
+                        if (min > time)
+                            min = time;
+                    }
+                }
+            }
+
+            Console.WriteLine(min);
+            Console.Read();
         }
     }
 }
