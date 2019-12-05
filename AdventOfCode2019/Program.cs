@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            Day4.part1();
+            Day5.part2();
         }
     }
 }
