@@ -53,49 +53,23 @@ namespace AdventOfCode2019
                 orbitee.Add(a[1], a[0]);
             }
 
-            List<string> you = new List<string>();
+            HashSet<string> uniquePlanets = new HashSet<string>();
             string last = orbitee["YOU"];
             while (last != "COM")
             {
-                you.Add(last);
+                uniquePlanets.Add(last);
                 last = orbitee[last];
             }
 
-            List<string> san = new List<string>();
             last = orbitee["SAN"];
             while (last != "COM")
             {
-                san.Add(last);
+                if (!uniquePlanets.Remove(last))
+                    uniquePlanets.Add(last);
                 last = orbitee[last];
             }
 
-            string common = "";
-            foreach(string p in you)
-            {
-                if (san.Contains(p))
-                {
-                    common = p;
-                    break;
-                }
-            }
-
-            int count = 0;
-
-            for(int i = 0; i < you.Count; i++)
-            {
-                if (you[i] == common)
-                    break;
-                count++;
-            }
-
-            for (int i = 0; i < san.Count; i++)
-            {
-                if (san[i] == common)
-                    break;
-                count++;
-            }
-
-            Console.WriteLine(count);
+            Console.WriteLine(uniquePlanets.Count);
             Console.Read();
         }
     }
