@@ -80,7 +80,10 @@ namespace AdventOfCode2019
             {
                 for (int x = 0; x < 25; x++)
                 {
-                    Console.Write(image[x, y]);
+                    if(image[x, y] == '1')
+                        Console.Write('#');
+                    else
+                        Console.Write(' ');
                 }
                 Console.WriteLine();
             }
