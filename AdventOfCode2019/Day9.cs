@@ -27,113 +27,83 @@ namespace AdventOfCode2019
 
             while (running)
             {
-                if(pc == 187)
-                {
-                    int a = 9;
-                }
                 int op = (int)mem[pc];
                 int mode0 = (op / 100) % 10;
                 int mode1 = (op / 1000) % 10;
                 int mode2 = (op / 10000) % 10;
 
-                long first = mem[pc + 1];
+                long first = pc + 1;
                 if (mode0 == 0)
-                    first = first >= mem.Length ? 0 : mem[first];
+                    first = mem[first];
                 else if (mode0 == 2)
-                    first = relBase + first >= mem.Length ? 0 : mem[relBase + first];
+                    first = relBase + mem[first];
 
-                long second = mem[pc + 2];
+                long second = pc + 2;
                 if (mode1 == 0)
-                    second = second >= mem.Length ? 0 : mem[second];
+                    second = mem[second];
                 else if (mode1 == 2)
-                    second = relBase + second >= mem.Length ? 0 : mem[relBase + second];
+                    second = relBase + mem[second];
+
+                long third = mem[pc + 3];
+                if (mode2 == 2)
+                    third = relBase + third;
+
+                long max = Math.Max(Math.Max(first, second), third);
+
+                if (max >= mem.Length)
+                    Array.Resize(ref mem, (int)max + 1);
 
                 switch (op % 100)
                 {
                     case 01:
                         {
-                            long third = mem[pc + 3];
-                            if (mode2 == 2)
-                                third = relBase + third;
-
-                            if (third >= mem.Length)
-                                Array.Resize(ref mem, (int)third + 1);
-
-                            mem[third] = first + second;
+                            mem[third] = mem[first] + mem[second];
                             pc += 4;
                         }
                         break;
                     case 02:
                         {
-                            long third = mem[pc + 3];
-                            if (mode2 == 2)
-                                third = relBase + third;
-
-                            if (third >= mem.Length)
-                                Array.Resize(ref mem, (int)third + 1);
-
-                            mem[third] = first * second;
+                            mem[third] = mem[first] * mem[second];
                             pc += 4;
                         }
                         break;
                     case 03:
                         {
-                            first = mem[pc + 1];
-                            if (mode0 == 2)
-                                first = relBase + first;
-
-                            if (first >= mem.Length)
-                                Array.Resize(ref mem, (int)first + 1);
-
                             mem[first] = Console.ReadKey(true).KeyChar - '0';
                             pc += 2;
                         }
                         break;
                     case 04:
                         {
-                            Console.Write(first);
+                            Console.Write(mem[first]);
                             pc += 2;
                         }
                         break;
                     case 05:
                         {
-                            pc = first != 0 ? second : pc + 3;
+                            pc = mem[first] != 0 ? mem[second] : pc + 3;
                         }
                         break;
                     case 06:
                         {
-                            pc = first == 0 ? second : pc + 3;
+                            pc = mem[first] == 0 ? mem[second] : pc + 3;
                         }
                         break;
                     case 07:
                         {
-                            long third = mem[pc + 3];
-                            if (mode2 == 2)
-                                third = relBase + third;
-
-                            if (third >= mem.Length)
-                                Array.Resize(ref mem, (int)third + 1);
-
-                            mem[third] = first < second ? 1 : 0;
+                            mem[third] = mem[first] < mem[second] ? 1 : 0;
                             pc += 4;
                         }
                         break;
                     case 08:
                         {
-                            long third = mem[pc + 3];
-                            if (mode2 == 2)
-                                third = relBase + third;
-
-                            if (third >= mem.Length)
-                                Array.Resize(ref mem, (int)third + 1);
-
-                            mem[third] = first == second ? 1 : 0;
+                            mem[third] = mem[first] == mem[second] ? 1 : 0;
                             pc += 4;
                         }
                         break;
                     case 09:
                         {
-                            relBase += first;
+                            relBase += mem[first];
                             pc += 2;
                         }
                         break;
