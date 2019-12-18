@@ -11,36 +11,67 @@ namespace AdventOfCode2019
     {
         public static void part1()
         {
-            Arcade arcade = new Arcade();
+            Arcade arcade = new Arcade(false);
 
-            int[,] matrix = new int[50, 50];
             int count = 0;
 
             while (true)
             {
-                long x = arcade.run(0);
-                long y = arcade.run(0);
-                long id = arcade.run(0);
+                long x = arcade.run();
+                long y = arcade.run();
+                long id = arcade.run();
                 if (id == 2)
                     count++;
-                if (x != -1 && y != -1 && id != -1)
-                    matrix[x, y] = (int)id;
-                else break;
-            }
-
-            for(int y = 0; y < 50; y++)
-            {
-                for(int x = 0; x < 50; x++)
-                {
-                    if(matrix[x, y] == 0)
-                        Console.Write(' ');
-                    else
-                        Console.Write(matrix[x, y]);
-                }
-                Console.WriteLine();
+                if (x == -1 || y == -1 || id == -1)
+                    break;
             }
 
             Console.WriteLine(count);
+            Console.Read();
+        }
+
+        public static void part2()
+        {
+            Arcade arcade = new Arcade(true);
+
+            while (true)
+            {
+                int x = (int)arcade.run();
+                int y = (int)arcade.run();
+                long id = arcade.run();
+                if (y == -1 || id == -1)
+                    break;
+                if(x == -1 && y == 0)
+                {
+                    Console.CursorLeft = 40;
+                    Console.CursorTop = 25;
+                    Console.Write(id + "                              ");
+                    continue;
+                }
+                Console.CursorLeft = x;
+                Console.CursorTop = y;
+
+                switch (id)
+                {
+                    case 0:
+                        Console.Write(' ');
+                        break;
+                    case 1:
+                        Console.Write('|');
+                        break;
+                    case 2:
+                        Console.Write('X');
+                        break;
+                    case 3:
+                        Console.Write('-');
+                        break;
+                    case 4:
+                        Console.Write('o');
+                        break;
+                }
+            }
+
+            Console.WriteLine();
             Console.Read();
         }
     }
@@ -53,7 +84,7 @@ namespace AdventOfCode2019
         long relBase;
         bool running;
 
-        public Arcade()
+        public Arcade(bool part2)
         {
             numbers = new StreamReader("day13.txt").ReadToEnd().Trim().Split(',');
             mem = new long[numbers.Length];
@@ -65,9 +96,12 @@ namespace AdventOfCode2019
             {
                 mem[i] = long.Parse(numbers[i]);
             }
+
+            if(part2)
+                mem[0] = 2;
         }
 
-        public long run(int input)
+        public long run()
         {
             while (running)
             {
@@ -113,7 +147,13 @@ namespace AdventOfCode2019
                         break;
                     case 03:
                         {
-                            mem[first] = input;
+                            var key = Console.ReadKey(true);
+                            if (key.Key == ConsoleKey.LeftArrow)
+                                mem[first] = -1;
+                            else if (key.Key == ConsoleKey.RightArrow)
+                                mem[first] = 1;
+                            else
+                                mem[first] = 0;
                             pc += 2;
                         }
                         break;
