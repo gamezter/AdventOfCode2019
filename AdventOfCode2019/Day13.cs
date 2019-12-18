@@ -192,7 +192,7 @@ namespace AdventOfCode2019
                         }
                         break;
                     case 99:
-                        running = false;
+                        pc = 0;
                         break;
                 }
             }
