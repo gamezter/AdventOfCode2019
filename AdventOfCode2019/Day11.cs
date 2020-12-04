@@ -11,7 +11,7 @@ namespace AdventOfCode2019
     {
         public static void part1()
         {
-            Robot rob = new Robot();
+            Robot rob = new Robot("day11.txt");
             int x = 49;
             int y = 49;
             int direction = 0; // 0 up, 1 right, 2 down, 3 left
@@ -75,7 +75,7 @@ namespace AdventOfCode2019
 
         public static void part2()
         {
-            Robot rob = new Robot();
+            Robot rob = new Robot("day11.txt");
             int x = 49;
             int y = 49;
             int direction = 0; // 0 up, 1 right, 2 down, 3 left
@@ -152,9 +152,9 @@ namespace AdventOfCode2019
         long relBase;
         bool running;
 
-        public Robot()
+        public Robot(string program)
         {
-            numbers = new StreamReader("day11.txt").ReadToEnd().Trim().Split(',');
+            numbers = new StreamReader(program).ReadToEnd().Trim().Split(',');
             mem = new long[numbers.Length];
 
             running = true;
