@@ -179,7 +179,7 @@ namespace AdventOfCode2019
             }
 
             Console.SetCursorPosition(0, 0);
-            Console.Write("DONE minutes: " + (minutes - 1));
+            Console.Write("minutes: " + (minutes - 1));
             Console.Read();
             Console.Read();
         }
