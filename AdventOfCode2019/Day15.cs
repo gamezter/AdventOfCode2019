@@ -99,7 +99,7 @@ namespace AdventOfCode2019
                     move(x, y + 1, rob.run(2));
                 else
                 {
-                    if (past.Count < 4)
+                    if (past.Count < 1)
                         goto done;
                     // backtrack
                     var last = past.Peek();
@@ -156,12 +156,12 @@ namespace AdventOfCode2019
                 }
                 count = oxygenFronts.Count;
                 printMap(map);
-                Console.SetCursorPosition(0, 0);
                 minutes++;
-                Console.Write("minutes: " + minutes);
             }
 
+            Console.SetCursorPosition(0, 0);
             Console.Write("DONE minutes: " + (minutes - 1));
+            Console.Read();
             Console.Read();
 
             void move(int newX, int newY, long status)
