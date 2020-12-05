@@ -76,18 +76,38 @@ namespace AdventOfCode2019
         public static void part2()
         {
             Robot rob = new Robot("day15.txt");
-            int x = 25;
-            int y = 25;
-
+            int x = 25, y = 25;
             int Ox = 0, Oy = 0;
             char[,] map = new char[50,50];
+            map[x, y] = ' ';
 
             Stack<(int x, int y)> past = new Stack<(int, int)>();
             past.Push((x, y));
 
-            map[x, y] = ' ';
+            void move(int newX, int newY, long status)
+            {
+                if (status == 0)
+                {
+                    map[newX, newY] = '█';
+                }
+                else if (status == 1)
+                {
+                    past.Push((x, y));
+                    x = newX;
+                    y = newY;
+                    map[newX, newY] = ' ';
+                }
+                else if (status == 2)
+                {
+                    past.Push((x, y));
+                    x = newX;
+                    y = newY;
+                    map[newX, newY] = 'O';
+                    Ox = x; Oy = y;
+                }
+            }
 
-            while (true)
+            while (past.Count > 0)
             {
                 if (map[x - 1, y] == 0)
                     move(x - 1, y, rob.run(3));
@@ -99,18 +119,18 @@ namespace AdventOfCode2019
                     move(x, y + 1, rob.run(2));
                 else
                 {
-                    if (past.Count < 1)
-                        goto done;
                     // backtrack
-                    var last = past.Peek();
+                    var last = past.Pop();
                     if (x > last.x)
-                        move(last.x, last.y, rob.run(3));
+                        rob.run(3);
                     else if (last.x > x)
-                        move(last.x, last.y, rob.run(4));
+                        rob.run(4);
                     else if (y > last.y)
-                        move(last.x, last.y, rob.run(1));
+                        rob.run(1);
                     else
-                        move(last.x, last.y, rob.run(2));
+                        rob.run(2);
+                    x = last.x;
+                    y = last.y;
                 }
 
                 printMap(map);
@@ -118,7 +138,6 @@ namespace AdventOfCode2019
                 Console.Write('D');
             }
 
-            done:
             Console.Read();
             //start oxygen flooding
             int minutes = 0;
@@ -163,39 +182,6 @@ namespace AdventOfCode2019
             Console.Write("DONE minutes: " + (minutes - 1));
             Console.Read();
             Console.Read();
-
-            void move(int newX, int newY, long status)
-            {
-                if (status == 0)
-                {
-                    map[newX, newY] = '█';
-                }
-                else if (status == 1)
-                {
-                    var previous = past.Pop();
-                    if (previous.x != newX || previous.y != newY)
-                    {
-                        past.Push(previous);
-                        past.Push((x, y));
-                    }
-                    x = newX;
-                    y = newY;
-                    map[x, y] = ' ';
-                }
-                else if (status == 2)
-                {
-                    var current = past.Pop();
-                    if (current.x != newX || current.y != newY)
-                    {
-                        past.Push(current);
-                        past.Push((x, y));
-                    }
-                    x = newX;
-                    y = newY;
-                    map[x, y] = 'O';
-                    Ox = x; Oy = y;
-                }
-            }
         }
 
         public static void printMap(char[,] map)
