@@ -24,25 +24,19 @@ namespace AdventOfCode2019
 
             while (true)
             {
-                var input = Console.ReadKey(true);
-                long status;
-                switch (input.Key)
+                switch (Console.ReadKey(true).Key)
                 {
                     case ConsoleKey.LeftArrow:
-                        status = rob.run(3);
-                        moveX(x - 1, status);
+                        moveX(x - 1, rob.run(3));
                         break;
                     case ConsoleKey.UpArrow:
-                        status = rob.run(1);
-                        moveY(y - 1, status);
+                        moveY(y - 1, rob.run(1));
                         break;
                     case ConsoleKey.RightArrow:
-                        status = rob.run(4);
-                        moveX(x + 1, status);
+                        moveX(x + 1, rob.run(4));
                         break;
                     case ConsoleKey.DownArrow:
-                        status = rob.run(2);
-                        moveY(y + 1, status);
+                        moveY(y + 1, rob.run(2));
                         break;
                 }
                 Console.SetCursorPosition(0, 0);
@@ -117,31 +111,25 @@ namespace AdventOfCode2019
             Robot rob = new Robot("day15.txt");
             int x = 25;
             int y = 25;
-            char[,] map = new char[50,50];
-            for(int i = 0; i < 50; i++)
-            {
-                for(int j = 0; j < 50; j++)
-                {
-                    map[i, j] = ' ';
-                }
-            }
 
+            int Ox = 0, Oy = 0;
+            char[,] map = new char[50,50];
 
             Stack<(int x, int y)> past = new Stack<(int, int)>();
             past.Push((0, 0));
             past.Push((x, y));
 
-            map[x, y] = '.';
+            map[x, y] = ' ';
 
             while (true)
             {
-                if (map[x - 1, y] == ' ')
+                if (map[x - 1, y] == 0)
                     move(x - 1, y, rob.run(3));
-                else if (map[x, y - 1] == ' ')
+                else if (map[x, y - 1] == 0)
                     move(x, y - 1, rob.run(1));
-                else if (map[x + 1, y] == ' ')
+                else if (map[x + 1, y] == 0)
                     move(x + 1, y, rob.run(4));
-                else if (map[x, y + 1] == ' ')
+                else if (map[x, y + 1] == 0)
                     move(x, y + 1, rob.run(2));
                 else
                 {
@@ -163,27 +151,65 @@ namespace AdventOfCode2019
                 printMap(map);
                 Console.SetCursorPosition(x, y);
                 Console.Write('D');
-                Console.SetCursorPosition(0, 0);
-                Console.Write(past.Count - 2);
             }
 
             done:
             //start oxygen flooding
-            int a = 9;
+            int minutes = 0;
+            Queue<(int x, int y)> oxygenFronts = new Queue<(int x, int y)>();
+            oxygenFronts.Enqueue((Ox, Oy));
 
+            int count = oxygenFronts.Count;
 
+            while(count > 0)
+            {
+                for(int i = 0; i < count; ++i)
+                {
+                    (int ox, int oy) = oxygenFronts.Dequeue();
+
+                    if (map[ox + 1, oy] == ' ')
+                    {
+                        map[ox + 1, oy] = 'O';
+                        oxygenFronts.Enqueue((ox + 1, oy));
+                    }
+                    if (map[ox - 1, oy] == ' ')
+                    {
+                        map[ox - 1, oy] = 'O';
+                        oxygenFronts.Enqueue((ox - 1, oy));
+                    }
+                    if (map[ox, oy + 1] == ' ')
+                    {
+                        map[ox, oy + 1] = 'O';
+                        oxygenFronts.Enqueue((ox, oy + 1));
+                    }
+                    if (map[ox, oy - 1] == ' ')
+                    {
+                        map[ox, oy - 1] = 'O';
+                        oxygenFronts.Enqueue((ox, oy - 1));
+                    }
+                }
+                count = oxygenFronts.Count;
+                printMap(map);
+                Console.SetCursorPosition(0, 0);
+                minutes++;
+                Console.Write("minutes: " + minutes);
+                Console.Read();
+            }
+
+            Console.Write("DONE minutes: " + (minutes - 1));
+            Console.Read();
 
             void move(int newX, int newY, long status)
             {
                 if (status == 0)
                 {
-                    map[newX, newY] = '#';
+                    map[newX, newY] = '█';
                 }
                 else if (status == 1)
                 {
                     x = newX;
                     y = newY;
-                    map[x, y] = '.';
+                    map[x, y] = ' ';
                     var current = past.Pop();
                     if (past.Peek().x != x || past.Peek().y != y)
                     {
@@ -196,6 +222,7 @@ namespace AdventOfCode2019
                     x = newX;
                     y = newY;
                     map[x, y] = 'O';
+                    Ox = x; Oy = y;
                     var current = past.Pop();
                     if (past.Peek().x != x || past.Peek().y != y)
                     {
