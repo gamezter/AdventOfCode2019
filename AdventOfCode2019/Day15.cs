@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2019
 {
@@ -15,7 +12,6 @@ namespace AdventOfCode2019
             int y = 25;
 
             Stack<(int x, int y)> past = new Stack<(int, int)>();
-            past.Push((0, 0));
             past.Push((x, y));
 
             Console.SetCursorPosition(x, y);
@@ -27,71 +23,41 @@ namespace AdventOfCode2019
                 switch (Console.ReadKey(true).Key)
                 {
                     case ConsoleKey.LeftArrow:
-                        moveX(x - 1, rob.run(3));
+                        move(x - 1, y, rob.run(3));
                         break;
                     case ConsoleKey.UpArrow:
-                        moveY(y - 1, rob.run(1));
+                        move(x, y - 1, rob.run(1));
                         break;
                     case ConsoleKey.RightArrow:
-                        moveX(x + 1, rob.run(4));
+                        move(x + 1, y, rob.run(4));
                         break;
                     case ConsoleKey.DownArrow:
-                        moveY(y + 1, rob.run(2));
+                        move(x, y + 1, rob.run(2));
                         break;
                 }
                 Console.SetCursorPosition(0, 0);
-                Console.Write(past.Count - 2);
+                Console.Write(past.Count);
             }
 
-            void moveX(int newX, long status)
+            void move(int newX, int newY, long status)
             {
                 if (status == 0)
                 {
-                    Console.SetCursorPosition(newX, y);
-                    Console.Write('#');
+                    Console.SetCursorPosition(newX, newY);
+                    Console.Write('█');
                 }
                 else if (status == 1)
                 {
                     Console.SetCursorPosition(x, y);
                     Console.Write('.');
-                    x = newX;
-                    var current = past.Pop();
-                    if (past.Peek().x != x)
+                    var previous = past.Pop();
+                    if (previous.x != newX || previous.y != newY)
                     {
-                        past.Push(current);
+                        past.Push(previous);
                         past.Push((x, y));
                     }
-                    Console.SetCursorPosition(x, y);
-                    Console.Write('D');
-                }
-                else if (status == 2)
-                {
-                    Console.SetCursorPosition(x, y);
-                    Console.Write('.');
                     x = newX;
-                    Console.SetCursorPosition(x, y);
-                    Console.Write('O');
-                }
-            }
-
-            void moveY(int newY, long status)
-            {
-                if (status == 0)
-                {
-                    Console.SetCursorPosition(x, newY);
-                    Console.Write('#');
-                }
-                else if (status == 1)
-                {
-                    Console.SetCursorPosition(x, y);
-                    Console.Write('.');
                     y = newY;
-                    var current = past.Pop();
-                    if (past.Peek().y != y)
-                    {
-                        past.Push(current);
-                        past.Push((x, y));
-                    }
                     Console.SetCursorPosition(x, y);
                     Console.Write('D');
                 }
@@ -99,6 +65,7 @@ namespace AdventOfCode2019
                 {
                     Console.SetCursorPosition(x, y);
                     Console.Write('.');
+                    x = newX;
                     y = newY;
                     Console.SetCursorPosition(x, y);
                     Console.Write('O');
@@ -116,7 +83,6 @@ namespace AdventOfCode2019
             char[,] map = new char[50,50];
 
             Stack<(int x, int y)> past = new Stack<(int, int)>();
-            past.Push((0, 0));
             past.Push((x, y));
 
             map[x, y] = ' ';
@@ -136,8 +102,7 @@ namespace AdventOfCode2019
                     if (past.Count < 4)
                         goto done;
                     // backtrack
-                    past.Pop();
-                    var last = past.Pop();
+                    var last = past.Peek();
                     if (x > last.x)
                         move(last.x, last.y, rob.run(3));
                     else if (last.x > x)
@@ -207,28 +172,28 @@ namespace AdventOfCode2019
                 }
                 else if (status == 1)
                 {
+                    var previous = past.Pop();
+                    if (previous.x != newX || previous.y != newY)
+                    {
+                        past.Push(previous);
+                        past.Push((x, y));
+                    }
                     x = newX;
                     y = newY;
                     map[x, y] = ' ';
+                }
+                else if (status == 2)
+                {
                     var current = past.Pop();
-                    if (past.Peek().x != x || past.Peek().y != y)
+                    if (current.x != newX || current.y != newY)
                     {
                         past.Push(current);
                         past.Push((x, y));
                     }
-                }
-                else if (status == 2)
-                {
                     x = newX;
                     y = newY;
                     map[x, y] = 'O';
                     Ox = x; Oy = y;
-                    var current = past.Pop();
-                    if (past.Peek().x != x || past.Peek().y != y)
-                    {
-                        past.Push(current);
-                        past.Push((x, y));
-                    }
                 }
             }
         }
