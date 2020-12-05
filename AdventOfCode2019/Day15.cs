@@ -154,6 +154,7 @@ namespace AdventOfCode2019
             }
 
             done:
+            Console.Read();
             //start oxygen flooding
             int minutes = 0;
             Queue<(int x, int y)> oxygenFronts = new Queue<(int x, int y)>();
@@ -193,7 +194,6 @@ namespace AdventOfCode2019
                 Console.SetCursorPosition(0, 0);
                 minutes++;
                 Console.Write("minutes: " + minutes);
-                Console.Read();
             }
 
             Console.Write("DONE minutes: " + (minutes - 1));
