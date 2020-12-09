@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2019
 {
@@ -38,44 +35,42 @@ namespace AdventOfCode2019
                 recipes[a[a.Length - 1]] = (int.Parse(a[a.Length - 2]), components);
             }
 
-            Queue<Ingredient> ingredients = new Queue<Ingredient>();
-            ingredients.Enqueue(new Ingredient("FUEL", 1));
             Dictionary<string, int> surplus = new Dictionary<string, int>();
+            Queue<string> ingredients = new Queue<string>();
+            ingredients.Enqueue("FUEL");
 
-            int ore = 0;
+            long ore = 0;
             while(ingredients.Count > 0)
             {
-                Ingredient current = ingredients.Dequeue();
-                string name = current.name;
-                int count = (int)current.count;
+                string name = ingredients.Dequeue();
 
                 if(surplus.TryGetValue(name, out int leftOver))
                 {
-                    if (count < leftOver)
+                    if (leftOver == 1)
                     {
-                        surplus[name] -= count;
-                        continue;
+                        surplus.Remove(name);
                     }
                     else
                     {
-                        count -= leftOver;
-                        surplus.Remove(name);
-                    } 
+                        surplus[name]--;
+                    }
                 }
-
-                if (name == "ORE")
-                    ore += count;
                 else
                 {
                     int min = recipes[name].count;
-                    int multiplier = (int)Math.Ceiling(count / (float)min);
 
-                    if (multiplier * min > count)
-                        surplus.Add(name, multiplier * min - count);
+                    if (min > 1)
+                        surplus.Add(name, min - 1);
 
                     foreach (var i in recipes[name].components)
                     {
-                        ingredients.Enqueue(new Ingredient(i.name, i.count * multiplier));
+                        if (i.name == "ORE")
+                            ore += i.count;
+                        else
+                        {
+                            for (int j = 0; j < i.count; ++j)
+                                ingredients.Enqueue(i.name);
+                        }
                     }
                 }
             }
